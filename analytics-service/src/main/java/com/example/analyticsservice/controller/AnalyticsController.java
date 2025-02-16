@@ -1,10 +1,12 @@
 package com.example.analyticsservice.controller;
 
-import com.example.analyticsservice.model.SurveyAnalyticsLog;
+import com.example.shared.model.SurveyAnalyticsLog;
 import com.example.analyticsservice.model.SurveyMetrics;
 import com.example.analyticsservice.repository.SurveyMetricsRepository;
 import com.example.analyticsservice.service.AnalyticsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,11 @@ public class AnalyticsController {
     }
 
     @GetMapping("/metrics")
+    @Operation(summary = "Get survey metrics")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved metrics"),
+        @ApiResponse(responseCode = "404", description = "Metrics not found")
+    })
     public ResponseEntity<SurveyMetrics> getMetrics() {
         SurveyMetrics metrics = surveyMetricsRepository.findById(1L)
                 .orElse(new SurveyMetrics());
@@ -35,6 +42,10 @@ public class AnalyticsController {
 
     @GetMapping("/logs")
     @Operation(summary = "Get all survey analytics logs")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved logs"),
+        @ApiResponse(responseCode = "404", description = "Logs not found")
+    })
     public ResponseEntity<List<SurveyAnalyticsLog>> getAllLogs() {
         List<SurveyAnalyticsLog> logs = analyticsService.getAllLogs();
         return ResponseEntity.ok(logs);

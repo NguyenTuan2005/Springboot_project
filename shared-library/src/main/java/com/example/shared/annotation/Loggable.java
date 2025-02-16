@@ -1,4 +1,4 @@
-package com.example.analyticsservice.annotation;
+package com.example.shared.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

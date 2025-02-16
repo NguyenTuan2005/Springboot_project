@@ -1,7 +1,7 @@
-package com.example.analyticsservice.aspect;
+package com.example.shared.aspect;
 
-import com.example.analyticsservice.model.SurveyAnalyticsLog;
-import com.example.analyticsservice.repository.SurveyAnalyticsLogRepository;
+import com.example.shared.model.SurveyAnalyticsLog;
+import com.example.shared.repository.SurveyAnalyticsLogRepository;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,7 +20,7 @@ public class SurveyLoggingAspect {
         this.logRepository = logRepository;
     }
 
-    @Around("@annotation(com.example.analyticsservice.annotation.Loggable)")
+    @Around("@annotation(com.example.shared.annotation.Loggable)")
     public Object logSurveySubmission(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
 
@@ -30,7 +30,7 @@ public class SurveyLoggingAspect {
         long timeTaken = endTime - startTime;
 
         String userLocation = mockUserLocation();
-        int responseLength = result.toString().length();
+        int responseLength = (result != null) ? result.toString().length() : 0;
 
         SurveyAnalyticsLog log = new SurveyAnalyticsLog();
         log.setTimeTaken(timeTaken);

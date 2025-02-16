@@ -1,7 +1,7 @@
 package com.example.analyticsservice.service;
 
-import com.example.analyticsservice.model.SurveyAnalyticsLog;
-import com.example.analyticsservice.repository.SurveyAnalyticsLogRepository;
+import com.example.shared.model.SurveyAnalyticsLog;
+import com.example.shared.repository.SurveyAnalyticsLogRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

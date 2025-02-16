@@ -1,4 +1,4 @@
-package com.example.analyticsservice.model;
+package com.example.shared.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

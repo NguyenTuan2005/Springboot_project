@@ -1,4 +1,4 @@
-package com.example.analyticsservice.converter;
+package com.example.shared.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

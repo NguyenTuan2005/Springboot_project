@@ -1,9 +1,14 @@
 package com.example.analyticsservice.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Map;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "survey_metrics")
 public class SurveyMetrics {
 

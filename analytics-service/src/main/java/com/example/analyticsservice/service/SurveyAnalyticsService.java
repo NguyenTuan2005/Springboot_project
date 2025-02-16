@@ -1,11 +1,12 @@
 package com.example.analyticsservice.service;
 
+import com.example.analyticsservice.dto.SurveyResponseDTO;
 import com.example.analyticsservice.model.SurveyMetrics;
-import com.example.analyticsservice.model.SurveyResponse;
 import com.example.analyticsservice.repository.SurveyMetricsRepository;
+import com.example.shared.annotation.Loggable;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,16 +14,21 @@ import java.util.Map;
 @Service
 public class SurveyAnalyticsService {
 
-    @Autowired
-    private SurveyMetricsRepository surveyMetricsRepository;
+    private final SurveyMetricsRepository surveyMetricsRepository;
 
+    public SurveyAnalyticsService(SurveyMetricsRepository surveyMetricsRepository) {
+        this.surveyMetricsRepository = surveyMetricsRepository;
+    }
+
+    @Transactional
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
-    public void processSurveyResponse(SurveyResponse surveyResponse) {
+    @Loggable
+    public void processSurveyResponse(SurveyResponseDTO surveyResponse) {
         // Process the survey response and update metrics
         updateMetrics(surveyResponse);
     }
 
-    private void updateMetrics(SurveyResponse surveyResponse) {
+    private void updateMetrics(SurveyResponseDTO surveyResponse) {
         SurveyMetrics metrics = surveyMetricsRepository.findById(1L)
                 .orElse(new SurveyMetrics());
 
@@ -30,9 +36,9 @@ public class SurveyAnalyticsService {
         metrics.setTotalResponses(metrics.getTotalResponses() + 1);
 
         // Update average company size
-        int currentTotal = metrics.getAverageCompanySize() * (metrics.getTotalResponses() - 1);
+        int currentTotal = (int) metrics.getAverageCompanySize() * (metrics.getTotalResponses() - 1);
         int newTotal = currentTotal + Integer.parseInt(surveyResponse.getCompanySize());
-        metrics.setAverageCompanySize(newTotal / metrics.getTotalResponses());
+        metrics.setAverageCompanySize((double) newTotal / metrics.getTotalResponses());
 
         // Update popular industries
         Map<String, Integer> industries = metrics.getPopularIndustries();

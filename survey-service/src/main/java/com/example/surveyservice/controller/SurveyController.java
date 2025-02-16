@@ -1,6 +1,6 @@
 package com.example.surveyservice.controller;
 
-import com.example.analyticsservice.annotation.Loggable;
+import com.example.shared.annotation.Loggable;
 import com.example.surveyservice.model.SurveyResponse;
 import com.example.surveyservice.service.SurveyService;
 import io.swagger.v3.oas.annotations.Operation;

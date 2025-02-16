@@ -1,6 +1,6 @@
 package com.example.surveyservice.model;
 
-import com.example.analyticsservice.converter.JsonbConverter;
+import com.example.shared.converter.JsonbConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
