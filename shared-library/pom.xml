@@ -13,9 +13,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>analytics-service</artifactId>
-    <name>analytics-service</name>
-    <description>Analytics Service Application</description>
+    <artifactId>shared-library</artifactId>
+    <name>shared-library</name>
+    <description>Shared Library Application</description>
     <packaging>jar</packaging>
 
     <properties>
@@ -24,16 +24,7 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>shared-library</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.15.3</version>
-        </dependency>
+
     </dependencies>
 
     <build>

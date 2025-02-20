@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/competitors")
+@RequestMapping("/api/v1/competitors")
 public class CompetitorTrendController {
 
     private final CompetitorTrendService competitorTrendService;
@@ -25,5 +25,10 @@ public class CompetitorTrendController {
         List<CompetitorTrend> trends = competitorTrendService.getTrendsForKeyword(keyword);
         return ResponseEntity.ok(trends);
     }
-}
 
+    @GetMapping("/fetch-trends")
+    public ResponseEntity<String> manualFetchTrends() {
+        competitorTrendService.fetchAndStoreTrends();
+        return ResponseEntity.ok("Trends fetched and stored.");
+    }
+}
