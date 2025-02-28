@@ -24,6 +24,10 @@ public class CompetitorTrendService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private static final String PYTHON_INTERPRETER = "C:\\Users\\ADMIN\\.virtualenvs\\python\\Scripts\\python.exe";
+
+    private static final String SCRIPT_PATH = "E:\\intelliJWorkspace\\springboot_project\\python-module\\scripts\\fetch_trends.py";
+
     public CompetitorTrendService(CompetitorTrendRepository competitorTrendRepository) {
         this.competitorTrendRepository = competitorTrendRepository;
     }
@@ -36,11 +40,9 @@ public class CompetitorTrendService {
     @Scheduled(cron = "0 0 0 * * SUN") // Run every Sunday at midnight
     public void fetchAndStoreTrends() {
         String[] keywords = {"CRM software", "ERP software", "Project management software"};
-        String pythonInterpreter = "C:\\Users\\ADMIN\\.virtualenvs\\python\\Scripts\\python.exe";
-        String scriptPath = "E:\\intelliJWorkspace\\springboot_project\\python-module\\scripts\\fetch_trends.py";
         for (String keyword : keywords) {
-            ProcessBuilder pb = new ProcessBuilder(pythonInterpreter,
-                    scriptPath, keyword);
+            ProcessBuilder pb = new ProcessBuilder(PYTHON_INTERPRETER,
+                    SCRIPT_PATH, keyword);
             pb.redirectErrorStream(true);
             Process process = pb.start();
 

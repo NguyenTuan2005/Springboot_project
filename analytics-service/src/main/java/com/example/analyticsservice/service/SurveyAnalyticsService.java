@@ -49,7 +49,6 @@ public class SurveyAnalyticsService {
         industries.put(industry, industries.getOrDefault(industry, 0) + 1);
         metrics.setPopularIndustries(industries);
 
-        // Save updated metrics
         surveyMetricsRepository.save(metrics);
     }
 }

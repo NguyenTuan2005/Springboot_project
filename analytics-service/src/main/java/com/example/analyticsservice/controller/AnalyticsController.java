@@ -1,5 +1,6 @@
 package com.example.analyticsservice.controller;
 
+import com.example.analyticsservice.service.ReportService;
 import com.example.shared.model.SurveyAnalyticsLog;
 import com.example.analyticsservice.model.SurveyMetrics;
 import com.example.analyticsservice.repository.SurveyMetricsRepository;
@@ -8,24 +9,29 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/analytics")
+@RequestMapping("api/analytics")
 @Tag(name = "Analytics", description = "Analytics management APIs")
 public class AnalyticsController {
 
     private final SurveyMetricsRepository surveyMetricsRepository;
     private final AnalyticsService analyticsService;
+    private final ReportService reportService;
 
-    public AnalyticsController(SurveyMetricsRepository surveyMetricsRepository, AnalyticsService analyticsService) {
+    public AnalyticsController(SurveyMetricsRepository surveyMetricsRepository, AnalyticsService analyticsService, ReportService reportService) {
         this.surveyMetricsRepository = surveyMetricsRepository;
         this.analyticsService = analyticsService;
+        this.reportService = reportService;
     }
 
     @GetMapping("/metrics")
@@ -49,6 +55,20 @@ public class AnalyticsController {
     public ResponseEntity<List<SurveyAnalyticsLog>> getAllLogs() {
         List<SurveyAnalyticsLog> logs = analyticsService.getAllLogs();
         return ResponseEntity.ok(logs);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<byte[]> generateReport(@RequestParam String domain) {
+        byte[] report = reportService.generateAnalyticsReport(domain);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment",
+                domain.replace(".", "-") + "-analytics-report.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(report);
     }
 }
 
