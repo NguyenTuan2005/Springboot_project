@@ -1,32 +1,39 @@
 package com.example.surveyservice.service;
 
-import com.example.surveyservice.model.CROTest;
+import java.util.*;
+
 import com.example.surveyservice.model.CROResult;
-import com.example.surveyservice.repository.CROResultRepository;
-import com.example.surveyservice.repository.CROTestRepository;
-import org.springframework.stereotype.Service;
+import com.example.surveyservice.model.CROTest;
 
-import java.util.List;
+public interface CROService {
 
-@Service
-public class CROService {
+    CROResult createResult(CROResult result);
 
-    private final CROTestRepository croRepository;
+    List<CROResult> getAllResults();
 
-    private final CROResultRepository croResultRepository;
+    Optional<CROResult> getResultById(long id);
 
-    public CROService(CROTestRepository croRepository, CROResultRepository croResultRepository) {
-        this.croRepository = croRepository;
-        this.croResultRepository = croResultRepository;
-    }
+    Optional<CROResult> updateResult(Long id, CROResult updateResult);
 
-    public CROResult creatResult(CROResult result) { return croResultRepository.save(result); }
+    boolean deleteResult(Long id);
 
-    public CROTest createTest(CROTest test) {
-        return croRepository.save(test);
-    }
+    CROTest createTest(CROTest test);
 
-    public List<CROResult> getTestResults(String testId) {
-        return croResultRepository.findCROResultByTestId(Long.parseLong(testId));
-    }
+    Optional<CROTest> getTestById(Long id);
+
+    List<CROTest> getAllTests();
+
+    Optional<CROTest> updateTest(Long id, CROTest updatedTest);
+
+    boolean deleteTest(Long id);
+
+    boolean recordImpression(Long testId, String variant);
+
+    boolean recordConversion(Long testId, String variant);
+
+    Optional<List<CROResult>> getTestResults(Long testId);
+
+    Optional<Map<String, Double>> getConversionRates(Long testId);
+
+    Optional<String> getWinningVariant(Long testId);
 }

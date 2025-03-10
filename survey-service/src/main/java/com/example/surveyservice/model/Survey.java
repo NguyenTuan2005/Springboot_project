@@ -1,23 +1,28 @@
 package com.example.surveyservice.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "survey")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Survey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    private String title;
+    String title;
 
     @Column(name = "target_industry")
-    private String targetIndustry;
+    String targetIndustry;
 
 }
 

@@ -1,18 +1,21 @@
 package com.example.surveyservice.controller;
 
+import com.example.surveyservice.exception.WebhookProcessingException;
 import com.example.surveyservice.service.WebhookService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.Operation;
 
+import java.util.Map;
+
+@Slf4j
 @RestController
-@RequestMapping("/webhooks")
+@RequestMapping("/api/v1/webhooks")
 @Tag(name = "Webhook", description = "Webhook management APIs")
 public class WebhookController {
 
@@ -23,27 +26,48 @@ public class WebhookController {
     }
 
     @PostMapping("/typeform")
-    @Operation(summary = "Handle Typeform webhook", description = "Handles incoming Typeform webhooks")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Webhook received successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid payload"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
     public ResponseEntity<String> handleTypeformWebhook(@RequestBody String payload) {
-        webhookService.processTypeformWebhook(payload);
-        return ResponseEntity.ok("Webhook received");
+        try {
+            log.info("Received Typeform webhook");
+            webhookService.processTypeformWebhook(payload);
+            return ResponseEntity.ok("Webhook processed successfully");
+        } catch (WebhookProcessingException e) {
+            log.error("Error processing Typeform webhook", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error processing Typeform webhook", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
     }
 
     @PostMapping("/surveymonkey")
-    @Operation(summary = "Handle SurveyMonkey webhook", description = "Handles incoming SurveyMonkey webhooks")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Webhook received successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid payload"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
     public ResponseEntity<String> handleSurveyMonkeyWebhook(@RequestBody String payload) {
-        webhookService.processSurveyMonkeyWebhook(payload);
-        return ResponseEntity.ok("Webhook received");
+        try {
+            log.info("Received SurveyMonkey webhook");
+            webhookService.processSurveyMonkeyWebhook(payload);
+            return ResponseEntity.ok("Webhook processed successfully");
+        } catch (WebhookProcessingException e) {
+            log.error("Error processing SurveyMonkey webhook", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error processing SurveyMonkey webhook", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<String> handleGenericWebhook(@RequestBody Map<String, Object> payload) {
+        try {
+            log.info("Received generic webhook");
+            webhookService.processWebhook(payload);
+            return ResponseEntity.ok("Webhook processed successfully");
+        } catch (WebhookProcessingException e) {
+            log.error("Error processing webhook", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error processing webhook", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
     }
 }
 

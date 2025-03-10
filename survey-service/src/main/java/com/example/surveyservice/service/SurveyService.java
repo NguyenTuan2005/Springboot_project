@@ -1,37 +1,34 @@
 package com.example.surveyservice.service;
 
-import com.example.surveyservice.config.RabbitMQConfig;
+import com.example.surveyservice.model.Survey;
 import com.example.surveyservice.model.SurveyResponse;
-import com.example.surveyservice.repository.SurveyResponseRepository;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.surveyservice.request.CreateSurveyResponseRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public class SurveyService {
+public interface SurveyService {
 
-    private final SurveyResponseRepository surveyResponseRepository;
+    SurveyResponse createSurveyResponse(Long surveyId, CreateSurveyResponseRequest createSurveyResponseRequest);
 
-    private final RabbitTemplate rabbitTemplate;
+    List<SurveyResponse> getSurveyResponses(Long surveyId);
 
-    public SurveyService(SurveyResponseRepository surveyResponseRepository, RabbitTemplate rabbitTemplate) {
-        this.surveyResponseRepository = surveyResponseRepository;
-        this.rabbitTemplate = rabbitTemplate;
-    }
+    Page<SurveyResponse> getSurveyResponsesPaginated(Long id, Pageable pageable);
 
-    public SurveyResponse saveSurveyResponse(SurveyResponse surveyResponse) {
-        SurveyResponse savedResponse = surveyResponseRepository.save(surveyResponse);
+    List<SurveyResponse> getAllSurveyResponses();
 
-        // Send message to RabbitMQ
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY, savedResponse);
+    Survey createSurvey(Survey survey);
 
-        return savedResponse;
-    }
+    List<Survey> getAllSurveys();
 
-    public List<SurveyResponse> getAllSurveyResponses() {
-        return surveyResponseRepository.findAll();
-    }
+    Optional<Survey> getSurveyById(Long id);
+
+    Optional<Survey> updateSurvey(Long id, Survey updatedSurvey);
+
+    boolean deleteSurvey(Long id);
+
+    List<Survey> getSurveysByTargetIndustry(String targetIndustry);
 }
 

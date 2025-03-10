@@ -8,7 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EntityScan(basePackages = {"com.example.shared.model", "com.example.surveyservice.model"})
-@EnableJpaRepositories(basePackages = {"com.example.shared.repository", "com.example.surveyservice.repository"})
+@EnableJpaRepositories(basePackages = {"com.example.shared.repository", "com.example.surveyservice.repository"},
+        entityManagerFactoryRef = "entityManagerFactory")
 @ComponentScan(basePackages = {
         "com.example.surveyservice",
         "com.example.shared"

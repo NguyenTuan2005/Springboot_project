@@ -1,24 +1,29 @@
 package com.example.surveyservice.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "crotest")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CROTest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
     
-    private String name;
+    String name;
 
-    private String targetUrl;
+    String targetUrl;
 
     @ElementCollection
-    private List<String> variants;
+    List<String> variants;
 }

@@ -1,46 +1,33 @@
 package com.example.surveyservice.service;
 
-import com.example.surveyservice.model.SurveyResponse;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Service;
+import com.example.surveyservice.exception.WebhookProcessingException;
 
-@Service
-public class WebhookService {
+import java.util.Map;
 
-    private final SurveyService surveyService;
+public interface WebhookService {
 
-    private final ObjectMapper objectMapper;
+    /**
+     * Process a webhook from Typeform.
+     *
+     * @param payload the JSON payload as a string
+     * @throws WebhookProcessingException if there is an error processing the webhook
+     */
+    void processTypeformWebhook(String payload) throws WebhookProcessingException;
 
-    public WebhookService(SurveyService surveyService, ObjectMapper objectMapper) {
-        this.surveyService = surveyService;
-        this.objectMapper = objectMapper;
-    }
+    /**
+     * Process a webhook from SurveyMonkey.
+     *
+     * @param payload the JSON payload as a string
+     * @throws WebhookProcessingException if there is an error processing the webhook
+     */
+    void processSurveyMonkeyWebhook(String payload) throws WebhookProcessingException;
 
-    public void processTypeformWebhook(String payload) {
-        try {
-            JsonNode jsonNode = objectMapper.readTree(payload);
-            // Extract relevant information from the Typeform payload
-            // Create a SurveyResponse object and save it
-            SurveyResponse response = new SurveyResponse();
-            // Set response properties based on the payload
-            surveyService.saveSurveyResponse(response);
-        } catch (Exception e) {
-            // Handle exception
-        }
-    }
-
-    public void processSurveyMonkeyWebhook(String payload) {
-        try {
-            JsonNode jsonNode = objectMapper.readTree(payload);
-            // Extract relevant information from the SurveyMonkey payload
-            // Create a SurveyResponse object and save it
-            SurveyResponse response = new SurveyResponse();
-            // Set response properties based on the payload
-            surveyService.saveSurveyResponse(response);
-        } catch (Exception e) {
-            // Handle exception
-        }
-    }
+    /**
+     * Process a generic webhook.
+     *
+     * @param payload the webhook payload as a map
+     * @throws WebhookProcessingException if there is an error processing the webhook
+     */
+    void processWebhook(Map<String, Object> payload) throws WebhookProcessingException;
 }
 

@@ -2,15 +2,18 @@ package com.example.surveyservice.model;
 
 import com.example.shared.converter.JsonbConverter;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 @Entity
-@Getter
-@Setter
-@Table(name = "survey_response")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class SurveyResponse {
 
     @Id
@@ -28,4 +31,5 @@ public class SurveyResponse {
     @Convert(converter = JsonbConverter.class)
     private Map<String, Object> answers;
 }
+
 
