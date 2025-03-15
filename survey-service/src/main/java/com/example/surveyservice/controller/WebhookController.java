@@ -2,6 +2,7 @@ package com.example.surveyservice.controller;
 
 import com.example.surveyservice.exception.WebhookProcessingException;
 import com.example.surveyservice.service.WebhookService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Slf4j
 @RestController
-@RequestMapping("/api/v1/webhooks")
-@Tag(name = "Webhook", description = "Webhook management APIs")
+@Slf4j
+@RequestMapping("/api/webhooks")
+@Tag(name = "Webhook", description = "Webhook APIs")
 public class WebhookController {
 
     private final WebhookService webhookService;
@@ -26,6 +27,7 @@ public class WebhookController {
     }
 
     @PostMapping("/typeform")
+    @Operation(summary = "Handle Typeform webhook")
     public ResponseEntity<String> handleTypeformWebhook(@RequestBody String payload) {
         try {
             log.info("Received Typeform webhook");
@@ -41,6 +43,7 @@ public class WebhookController {
     }
 
     @PostMapping("/surveymonkey")
+    @Operation(summary = "Handle SurveyMonkey webhook")
     public ResponseEntity<String> handleSurveyMonkeyWebhook(@RequestBody String payload) {
         try {
             log.info("Received SurveyMonkey webhook");
@@ -56,6 +59,7 @@ public class WebhookController {
     }
 
     @PostMapping
+    @Operation(summary = "Handle generic webhook")
     public ResponseEntity<String> handleGenericWebhook(@RequestBody Map<String, Object> payload) {
         try {
             log.info("Received generic webhook");

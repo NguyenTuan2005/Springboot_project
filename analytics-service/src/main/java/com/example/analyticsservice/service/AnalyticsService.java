@@ -1,30 +1,31 @@
 package com.example.analyticsservice.service;
 
 import com.example.shared.model.SurveyAnalyticsLog;
-import com.example.shared.repository.SurveyAnalyticsLogRepository;
-import io.micrometer.core.instrument.MeterRegistry;
-import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-@Service
-public class AnalyticsService {
+public interface AnalyticsService {
+    // SurveyAnalyticsLog methods
+    List<SurveyAnalyticsLog> getAllLogs();
 
-    private final MeterRegistry meterRegistry;
+    Optional<SurveyAnalyticsLog> getLogById(Long id);
 
-    private final SurveyAnalyticsLogRepository logRepository;
+    SurveyAnalyticsLog createLog(SurveyAnalyticsLog log);
 
-    public AnalyticsService(MeterRegistry meterRegistry, SurveyAnalyticsLogRepository logRepository) {
-        this.meterRegistry = meterRegistry;
-        this.logRepository = logRepository;
-    }
+    void deleteLog(Long id);
 
-    public List<SurveyAnalyticsLog> getAllLogs() {
-        return logRepository.findAll();
-    }
+    List<SurveyAnalyticsLog> getLogsByUserLocation(String location);
 
-    public void trackPageView(String page) {
-        meterRegistry.counter("page.views", "page", page).increment();
-    }
+    List<SurveyAnalyticsLog> getLogsByTimeRange(LocalDateTime start, LocalDateTime end);
+
+    // Analytics specific methods
+    void trackPageView(String page);
+
+    void trackSurveyCompletion(String userLocation, long timeTaken, int responseLength);
+
+    Map<String, Object> getAnalyticsSummary();
 }
 

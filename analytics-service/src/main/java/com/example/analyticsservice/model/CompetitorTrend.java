@@ -1,14 +1,18 @@
 package com.example.analyticsservice.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@SuperBuilder
 @Table(name = "competitor_trends")
 public class CompetitorTrend {
 
@@ -17,7 +21,7 @@ public class CompetitorTrend {
     private Long id;
 
     private String keyword;
-    private int trendScore;
+    private Double trendScore;
     private LocalDate date;
 }
 

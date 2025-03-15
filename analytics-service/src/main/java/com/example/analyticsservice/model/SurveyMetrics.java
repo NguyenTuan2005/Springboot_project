@@ -24,7 +24,5 @@ public class SurveyMetrics {
     @MapKeyColumn(name = "industry")
     @Column(name = "count")
     private Map<String, Integer> popularIndustries;
-
-    // Getters and setters
 }
 
