@@ -46,14 +46,14 @@ public class SurveyController {
         }
     }
 
-    @GetMapping("/responses/all")
+    @GetMapping("/responses")
     @Operation(summary = "Get all survey responses")
     public ResponseEntity<List<SurveyResponse>> getAllResponses() {
         List<SurveyResponse> responses = surveyService.getAllSurveyResponses();
         return ResponseEntity.ok(responses);
     }
 
-    @Operation(summary = "Get all survey  for a specific test")
+    @Operation(summary = "Get all survey response for a specific test")
     @GetMapping("/{surveyId}/responses")
     public ResponseEntity<List<SurveyResponse>> getSurveyResponses(@PathVariable Long surveyId) {
         List<SurveyResponse> responses = surveyService.getSurveyResponses(surveyId);

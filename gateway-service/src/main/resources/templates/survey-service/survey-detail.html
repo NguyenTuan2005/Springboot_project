@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(title='Survey Detail')}"></head>
+<body>
+<div class="container-fluid">
+    <div th:replace="~{fragments :: navbar(activePage='surveys')}"></div>
+
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0" th:text="${survey.title}">Survey Title</h4>
+                <div>
+                    <a th:href="@{/surveys/{id}/responses(id=${survey.id})}" class="btn btn-light btn-sm me-2">
+                        <i class="bi bi-bar-chart-fill"></i> View Responses
+                    </a>
+                    <a th:href="@{/journey/{id}(id=${survey.id})}" class="btn btn-light btn-sm me-2">
+                        <i class="bi bi-signpost-split-fill"></i> Journey Map
+                    </a>
+                    <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editSurveyModal">
+                        <i class="bi bi-pencil-fill"></i> Edit
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteSurveyModal">
+                        <i class="bi bi-trash-fill"></i> Delete
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Survey Details</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>Survey ID:</th>
+                                <td th:text="${survey.id}">ID123</td>
+                            </tr>
+                            <tr>
+                                <th>Created:</th>
+                                <td th:text="${#temporals.format(survey.createdAt, 'dd MMM yyyy')}">01 Jan 2023</td>
+                            </tr>
+                            <tr>
+                                <th>Last Updated:</th>
+                                <td th:text="${#temporals.format(survey.updatedAt, 'dd MMM yyyy')}">01 Jan 2023</td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td>
+                                        <span class="badge rounded-pill"
+                                              th:classappend="${survey.active} ? 'bg-success' : 'bg-secondary'"
+                                              th:text="${survey.active} ? 'Active' : 'Inactive'">Active</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Platform:</th>
+                                <td th:text="${survey.platform}">Typeform</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Description</h5>
+                        <div class="p-3 bg-light rounded mb-3">
+                            <p th:text="${survey.description}">Survey description goes here.</p>
+                        </div>
+
+                        <h5>Target Audience</h5>
+                        <div class="p-3 bg-light rounded">
+                            <p th:text="${survey.targetAudience}">Target audience information.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h5>Questions</h5>
+                <div class="list-group mt-3">
+                    <div th:each="question, qStat : ${survey.questions}" class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1" th:text="${qStat.count + '. ' + question.text}">1. Question text</h6>
+                            <small th:text="${question.type}">Type</small>
+                        </div>
+                        <div th:if="${question.options != null and !question.options.isEmpty()}" class="mt-2">
+                            <small class="text-muted">Options:</small>
+                            <ul class="list-unstyled ms-3">
+                                <li th:each="option : ${question.options}" th:text="${option}">Option</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-white text-end">
+                <a th:href="@{/surveys}" class="btn btn-secondary">Back to Surveys</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Survey Modal -->
+<div class="modal fade" id="editSurveyModal" tabindex="-1" aria-labelledby="editSurveyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form th:action="@{/surveys/{id}(id=${survey.id})}" th:method="put" th:object="${survey}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editSurveyModalLabel">Edit Survey</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div th:replace="~{fragments :: survey-form-fields}"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Survey Modal -->
+<div class="modal fade" id="deleteSurveyModal" tabindex="-1" aria-labelledby="deleteSurveyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/surveys/{id}(id=${survey.id})}" th:method="delete">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteSurveyModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the survey "<span th:text="${survey.title}">Survey Title</span>"?</p>
+                    <p class="text-danger">This action cannot be undone and will remove all associated responses.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete Survey</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments :: footer}"></div>
+<div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

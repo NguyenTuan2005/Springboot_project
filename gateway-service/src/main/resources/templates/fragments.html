@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head Fragment -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Survey Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background-color: #f8f9fa;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.2rem;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #333;
+        }
+        .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .card-survey {
+            transition: transform 0.3s;
+        }
+        .card-survey:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .banner {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+    </style>
+</head>
+
+<!-- Navigation Fragment -->
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/surveys">
+            <i class="bi bi-clipboard-data"></i> Survey Management
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${activePage == 'surveys' ? 'active' : ''}" href="/surveys">Surveys</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${activePage == 'webhooks' ? 'active' : ''}" href="/webhooks">Webhooks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${activePage == 'journeys' ? 'active' : ''}" href="/journeys">Customer Journeys</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="/surveys/responses" class="btn btn-outline-light me-2">
+                    <i class="bi bi-bar-chart"></i> All Responses
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar Fragment -->
+<div th:fragment="sidebar" class="col-md-2 d-none d-md-block sidebar">
+    <div class="sidebar-heading border-bottom">
+        <i class="bi bi-gear"></i> Actions
+    </div>
+    <div class="list-group list-group-flush">
+        <a href="/surveys" class="list-group-item list-group-item-action" th:classappend="${activePage == 'surveys' ? 'active' : ''}">
+            <i class="bi bi-clipboard-data"></i> Surveys
+        </a>
+        <a href="/webhooks" class="list-group-item list-group-item-action" th:classappend="${activePage == 'webhooks' ? 'active' : ''}">
+            <i class="bi bi-box-arrow-in-down"></i> Webhooks
+        </a>
+        <a href="/journeys" class="list-group-item list-group-item-action" th:classappend="${activePage == 'journeys' ? 'active' : ''}">
+            <i class="bi bi-signpost-split"></i> Journeys
+        </a>
+    </div>
+</div>
+
+<!-- Footer Fragment -->
+<footer th:fragment="footer" class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container text-center">
+        <span>© 2025 Survey Management System</span>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Enable tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        </script>
+    </div>
+</footer>
+
+<!-- Error Alert Fragment -->
+<div th:fragment="error-alert" th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${error}">Error message</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+</html>

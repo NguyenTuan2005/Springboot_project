@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head(title='Submit Survey Response')">
+    <title>Submit Survey Response</title>
+</head>
+<body>
+<div th:replace="fragments :: header"></div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div th:replace="fragments :: sidebar(activePage='surveys')"></div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Submit Survey Response</h4>
+                </div>
+
+                <div class="card-body">
+                    <div th:if="${error}" class="alert alert-danger" role="alert">
+                        <span th:text="${error}">Error message</span>
+                    </div>
+
+                    <form th:action="@{/surveys/{surveyId}/responses(surveyId=${surveyId})}" method="post" th:object="${response}" class="needs-validation" novalidate>
+                        <div th:replace="base-form :: formGroup('respondentName', 'Respondent Name', 'text', 'Enter respondent name')"></div>
+                        <div th:replace="base-form :: formGroup('respondentEmail', 'Respondent Email', 'email', 'Enter respondent email')"></div>
+
+                        <div class="mb-3">
+                            <label for="answers" class="form-label">Answers (JSON format)</label>
+                            <textarea id="answers" name="answers" th:field="*{answers}" class="form-control" rows="5" required></textarea>
+                            <div class="invalid-feedback">Please provide the answers in JSON format.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="metadata" class="form-label">Metadata (Optional)</label>
+                            <textarea id="metadata" name="metadata" th:field="*{metadata}" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="completed" name="completed" th:field="*{completed}">
+                            <label class="form-check-label" for="completed">Mark as completed</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/surveys/{surveyId}/responses(surveyId=${surveyId})}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Submit Response</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
+
+<script th:replace="fragments :: validation-script"></script>
+</body>
+</html>

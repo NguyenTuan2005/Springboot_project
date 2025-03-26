@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey System Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .service-card {
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">Market Research</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/dashboard">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/surveys">Surveys</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/analytics-service">Analytics</a>
+                </li>
+            </ul>
+        </div>
+        <form action="/logout" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center mb-5">
+            <h1>Welcome to the System</h1>
+            <p class="lead">Select a service to get started</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card service-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Survey Service</h5>
+                    <p class="card-text">Create and manage surveys, collect responses, and view results.</p>
+                    <a href="/surveys" class="btn btn-primary">Go to Surveys</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card service-card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Analytics Service</h5>
+                    <p class="card-text">View analytics, generate reports, and track competitor trends.</p>
+                    <a href="/analytics-service" class="btn btn-primary">Go to Analytics</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-light py-4 mt-5">
+    <div class="container text-center">
+        <p>© 2025 Market Research. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX'); // Replace with your GA4 measurement ID
+</script>
+</body>
+</html>

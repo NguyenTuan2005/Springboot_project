@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/analytics")
-@Tag(name = "Analytics", description = "Analytics management APIs")
+@Tag(name = "Analytic", description = "Analytics management APIs")
 public class AnalyticsController {
 
     private final SurveyAnalyticsService surveyAnalyticsService;

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(title='Create Survey')}"></head>
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0" th:text="${survey?.id} ? 'Edit Survey' : 'Create New Survey'"></h3>
+        </div>
+        <div class="card-body">
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+<!--            <form th:action="${survey?.id} ? @{/surveys/{id}(id=${survey.id})} : @{/surveys}"-->
+<!--                  th:method="${survey?.id} ? 'put' : 'post'"-->
+<!--                  th:object="${survey}" class="needs-validation" novalidate>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <label for="title" class="form-label">Survey Title</label>-->
+<!--                    <input type="text" class="form-control" id="title" th:field="*{title}"-->
+<!--                           required placeholder="Enter survey title">-->
+<!--                    <div class="invalid-feedback">Please provide a survey title.</div>-->
+<!--                </div>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <label for="description" class="form-label">Description</label>-->
+<!--                    <textarea class="form-control" id="description" th:field="*{description}"-->
+<!--                              rows="3" placeholder="Enter survey description"></textarea>-->
+<!--                </div>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <label for="surveyType" class="form-label">Survey Type</label>-->
+<!--                    <select class="form-select" id="surveyType" th:field="*{surveyType}" required>-->
+<!--                        <option value="">&#45;&#45; Select Survey Type &#45;&#45;</option>-->
+<!--                        <option value="CUSTOMER_SATISFACTION">Customer Satisfaction</option>-->
+<!--                        <option value="PRODUCT_FEEDBACK">Product Feedback</option>-->
+<!--                        <option value="MARKET_RESEARCH">Market Research</option>-->
+<!--                        <option value="EMPLOYEE_FEEDBACK">Employee Feedback</option>-->
+<!--                        <option value="OTHER">Other</option>-->
+<!--                    </select>-->
+<!--                    <div class="invalid-feedback">Please select a survey type.</div>-->
+<!--                </div>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <label for="status" class="form-label">Status</label>-->
+<!--                    <select class="form-select" id="status" th:field="*{status}">-->
+<!--                        <option value="DRAFT">Draft</option>-->
+<!--                        <option value="ACTIVE">Active</option>-->
+<!--                        <option value="CLOSED">Closed</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <label for="startDate" class="form-label">Start Date</label>-->
+<!--                    <input type="date" class="form-control" id="startDate" th:field="*{startDate}">-->
+<!--                </div>-->
+
+<!--                <div class="mb-3">-->
+<!--                    <label for="endDate" class="form-label">End Date</label>-->
+<!--                    <input type="date" class="form-control" id="endDate" th:field="*{endDate}">-->
+<!--                </div>-->
+
+<!--                <div class="mb-3 form-check">-->
+<!--                    <input type="checkbox" class="form-check-input" id="anonymous" th:field="*{anonymous}">-->
+<!--                    <label class="form-check-label" for="anonymous">Anonymous Responses</label>-->
+<!--                </div>-->
+
+<!--                <div class="d-flex justify-content-between">-->
+<!--                    <a th:href="@{/surveys}" class="btn btn-secondary">Cancel</a>-->
+<!--                    <button type="submit" class="btn btn-primary">-->
+<!--                        <i class="bi bi-save"></i>-->
+<!--                        <span th:text="${survey?.id} ? 'Update Survey' : 'Create Survey'"></span>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </form>-->
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments :: footer}"></div>
+
+<script>
+    // JavaScript for form validation
+    (function() {
+        'use strict';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('.needs-validation');
+
+            Array.from(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        });
+    })();
+</script>
+</body>
+</html>

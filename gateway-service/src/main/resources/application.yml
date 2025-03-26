@@ -1,0 +1,68 @@
+# Server configuration
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  rabbitmq:
+    enabled: false
+  cloud:
+    gateway:
+      routes:
+        - id: survey-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/surveys/**
+          filters:
+            - RewritePath=/api/surveys/(?<segment>.*), /api/v1/surveys/${segment}
+        - id: analytics-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/analytics/**
+          filters:
+            - RewritePath=/api/analytics/(?<segment>.*), /api/v1/analytics/${segment}
+      globalcors:
+        corsConfigurations:
+          '/**':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+management:
+  health:
+    rabbit:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+survey:
+  service:
+    base-url: "http://localhost:8082"
+
+analytics:
+  service:
+    base-url: "http://localhost:8081"
+
+app:
+  view:
+    survey-prefix: survey-service/
+    analytics-prefix: analytics-service/

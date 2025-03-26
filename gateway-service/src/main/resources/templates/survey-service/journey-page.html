@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head(title='Customer Journeys')">
+    <title>Customer Journeys</title>
+</head>
+<body>
+<div th:replace="fragments :: navigation(activePage='journeys')"></div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Journey Overview Card -->
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3>Customer Journeys</h3>
+                    <button class="btn btn-light" data-toggle="modal" data-target="#addJourneyModal">
+                        <i class="fas fa-plus-circle"></i> Add Touchpoint
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Customer journeys help you visualize all interactions with your customers across different channels.
+                    </div>
+
+                    <!-- Journey List -->
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4 mb-4" th:each="journey : ${journeys}" th:if="${journeys != null}">
+                            <div class="card h-100 journey-card">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0" th:text="${journey.customerName}">Customer Journey</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <span class="badge badge-primary mr-2">Touchpoints:</span>
+                                        <span class="badge badge-secondary" th:text="${journey.touchpoints.size()}">5</span>
+                                    </p>
+                                    <p class="card-text">
+                                        <span class="badge badge-primary mr-2">Last Interaction:</span>
+                                        <span th:text="${#temporals.format(journey.lastInteraction, 'dd-MM-yyyy')}">01-06-2023</span>
+                                    </p>
+                                    <p class="card-text">
+                                        <span class="badge badge-primary mr-2">Status:</span>
+                                        <span class="badge badge-success" th:if="${journey.status == 'ACTIVE'}">Active</span>
+                                        <span class="badge badge-warning" th:if="${journey.status == 'STALLED'}">Stalled</span>
+                                        <span class="badge badge-danger" th:if="${journey.status == 'CHURNED'}">Churned</span>
+                                        <span class="badge badge-info" th:if="${journey.status == 'COMPLETED'}">Completed</span>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-white border-top-0">
+                                    <a th:href="@{/journey/{id}(id=${journey.surveyId})}" class="btn btn-outline-primary btn-block">
+                                        <i class="fas fa-route"></i> View Journey
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div class="col-12 text-center py-5" th:if="${journeys == null || #lists.isEmpty(journeys)}">
+                            <div class="empty-state">
+                                <i class="fas fa-route fa-5x text-muted mb-3"></i>
+                                <h4 class="text-muted">No customer journeys found</h4>
+                                <p class="text-muted">Start by adding a journey touchpoint using the button above.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journey Analytics Card -->
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h3>Journey Analytics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Touchpoint Distribution -->
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Touchpoint Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="touchpointChart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Satisfaction Trend -->
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">Customer Satisfaction Trend</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="satisfactionChart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Metrics -->
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="card bg-info text-white h-100">
+                                <div class="card-body">
+                                    <h5>Active Journeys</h5>
+                                    <h2 class="mb-0" th:text="${activeJourneys != null ? activeJourneys : '0'}">8</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white h-100">
+                                <div class="card-body">
+                                    <h5>Avg. CSAT Score</h5>
+                                    <h2 class="mb-0" th:text="${avgCSAT != null ? avgCSAT : '0.0'}">4.2</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-white h-100">
+                                <div class="card-body">
+                                    <h5>Avg. Touchpoints</h5>
+                                    <h2 class="mb-0" th:text="${avgTouchpoints != null ? avgTouchpoints : '0'}">5</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-danger text-white h-100">
+                                <div class="card-body">
+                                    <h5>Churn Rate</h5>
+                                    <h2 class="mb-0" th:text="${churnRate != null ? #numbers.formatDecimal(churnRate, 1, 1) + '%' : '0.0%'}">12.5%</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Journey Touchpoint Modal -->
+<div class="modal fade" id="addJourneyModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Add Journey Touchpoint</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/journey}" method="post" id="journeyForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="customerName">Customer Name</label>
+                            <input type="text" class="form-control" id="customerName" name="customerName" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="surveyId">Related Survey</label>
+                            <select class="form-control" id="surveyId" name="surveyId">
+                                <option value="">-- Select Survey --</option>
+                                <option th:each="survey : ${surveys}"
+                                        th:value="${survey.id}"
+                                        th:text="${survey.title}" th:if="${surveys != null}">Survey Title</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="touchpointType">Touchpoint Type</label>
+                            <select class="form-control" id="touchpointType" name="touchpointType" required>
+                                <option value="SURVEY">Survey</option>
+                                <option value="EMAIL">Email</option>
+                                <option value="CALL">Phone Call</option>
+                                <option value="MEETING">Meeting</option>
+                                <option value="SUPPORT">Support Ticket</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="touchpointDate">Touchpoint Date</label>
+                            <input type="date" class="form-control" id="touchpointDate" name="touchpointDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="satisfactionScore">Satisfaction Score (1-5)</label>
+                            <input type="number" class="form-control" id="satisfactionScore" name="satisfactionScore" min="1" max="5">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="status">Journey Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="ACTIVE">Active</option>
+                                <option value="STALLED">Stalled</option>
+                                <option value="CHURNED">Churned</option>
+                                <option value="COMPLETED">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="journeyForm" class="btn btn-primary">Save Touchpoint</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
+
+<script>
+    // Charts initialization (using Chart.js)
+    document.addEventListener('DOMContentLoaded', function() {
+        // Example data - replace with actual data from backend
+        if (document.getElementById('touchpointChart')) {
+            const touchpointCtx = document.getElementById('touchpointChart').getContext('2d');
+            new Chart(touchpointCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Survey', 'Email', 'Phone Call', 'Meeting', 'Support', 'Other'],
+                    datasets: [{
+                        data: [12, 19, 8, 5, 10, 3],
+                        backgroundColor: [
+                            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutoutPercentage: 65,
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            });
+        }
+
+        if (document.getElementById('satisfactionChart')) {
+            const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
+            new Chart(satisfactionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'CSAT Score',
+                        data: [3.8, 4.1, 3.9, 4.2, 4.5, 4.3],
+                        borderColor: '#4e73df',
+                        backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#4e73df',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false,
+                                min: 1,
+                                max: 5,
+                                stepSize: 1
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

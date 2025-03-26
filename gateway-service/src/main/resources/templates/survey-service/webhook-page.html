@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head(title='Webhooks Management')">
+    <title>Webhooks Management</title>
+</head>
+<body>
+<div th:replace="fragments :: navigation(activePage='webhooks')"></div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Webhooks Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Configure webhooks to receive data from external survey providers.
+                    </div>
+
+                    <ul class="nav nav-tabs" id="webhookTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="generic-tab" data-toggle="tab" href="#generic" role="tab">Generic</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="typeform-tab" data-toggle="tab" href="#typeform" role="tab">Typeform</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="surveymonkey-tab" data-toggle="tab" href="#surveymonkey" role="tab">SurveyMonkey</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-3" id="webhookTabsContent">
+                        <!-- Generic Webhook Form -->
+                        <div class="tab-pane fade show active" id="generic" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Generic Webhook</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form th:action="@{/webhooks}" method="post">
+                                        <div class="form-group">
+                                            <label for="webhookUrl">Webhook URL</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">URL</span>
+                                                </div>
+                                                <input type="text" class="form-control" id="webhookUrl" name="webhookUrl"
+                                                       readonly th:value="${#httpServletRequest.scheme + '://' + #httpServletRequest.serverName + ':' + #httpServletRequest.serverPort + '/webhooks'}" />
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('#webhookUrl')">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="payload">Test Payload (JSON)</label>
+                                            <textarea class="form-control" id="payload" name="payload" rows="5" placeholder="{ &quot;key&quot;: &quot;value&quot; }"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Test Webhook</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Typeform Webhook Form -->
+                        <div class="tab-pane fade" id="typeform" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Typeform Webhook</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form th:action="@{/webhooks/typeform}" method="post">
+                                        <div class="form-group">
+                                            <label for="typeformUrl">Typeform Webhook URL</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">URL</span>
+                                                </div>
+                                                <input type="text" class="form-control" id="typeformUrl" name="webhookUrl"
+                                                       readonly th:value="${#httpServletRequest.scheme + '://' + #httpServletRequest.serverName + ':' + #httpServletRequest.serverPort + '/webhooks/typeform'}" />
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('#typeformUrl')">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="typeformId">Typeform ID</label>
+                                            <input type="text" class="form-control" id="typeformId" name="surveyProviderId" placeholder="Enter your Typeform ID">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="typeformSecretKey">Secret Key (optional)</label>
+                                            <input type="text" class="form-control" id="typeformSecretKey" name="secretKey" placeholder="Enter secret key if configured">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Save Configuration</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SurveyMonkey Webhook Form -->
+                        <div class="tab-pane fade" id="surveymonkey" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>SurveyMonkey Webhook</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form th:action="@{/webhooks/surveymonkey}" method="post">
+                                        <div class="form-group">
+                                            <label for="surveymonkeyUrl">SurveyMonkey Webhook URL</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">URL</span>
+                                                </div>
+                                                <input type="text" class="form-control" id="surveymonkeyUrl" name="webhookUrl"
+                                                       readonly th:value="${#httpServletRequest.scheme + '://' + #httpServletRequest.serverName + ':' + #httpServletRequest.serverPort + '/webhooks/surveymonkey'}" />
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('#surveymonkeyUrl')">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="surveymonkeyId">SurveyMonkey Survey ID</label>
+                                            <input type="text" class="form-control" id="surveymonkeyId" name="surveyProviderId" placeholder="Enter your SurveyMonkey Survey ID">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Save Configuration</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Webhook History Section -->
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h3>Webhook History</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Provider</th>
+                                <th>Survey ID</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Replace with actual webhook history data -->
+                            <tr th:if="${webhookHistory != null}" th:each="webhook : ${webhookHistory}">
+                                <td th:text="${webhook.timestamp}">2023-06-01 14:30:45</td>
+                                <td th:text="${webhook.provider}">Generic</td>
+                                <td th:text="${webhook.surveyId}">survey123</td>
+                                <td>
+                                    <span th:if="${webhook.status == 'SUCCESS'}" class="badge badge-success">Success</span>
+                                    <span th:if="${webhook.status == 'FAILED'}" class="badge badge-danger">Failed</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" data-toggle="modal" th:data-target="'#webhookDetails-' + ${webhook.id}">
+                                        View Details
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr th:if="${webhookHistory == null || #lists.isEmpty(webhookHistory)}">
+                                <td colspan="5" class="text-center">No webhook history available</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
+
+<script>
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).val()).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+        // Show tooltip
+        $(element).tooltip({
+            trigger: 'manual',
+            placement: 'bottom',
+            title: 'Copied!'
+        }).tooltip('show');
+
+        setTimeout(function() {
+            $(element).tooltip('hide');
+        }, 1000);
+    }
+</script>
+</body>
+</html>

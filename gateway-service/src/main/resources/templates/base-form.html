@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Generic Form Fragment -->
+<div th:fragment="form(action, method, formId, submitText)">
+    <form th:action="${action}" th:method="${method}" th:id="${formId}" class="needs-validation" novalidate>
+        <!-- Error alert component -->
+        <div th:replace="~{fragments :: error-alert}"></div>
+
+        <!-- Form content will be inserted here -->
+        <div th:replace="~{::form-content}"></div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="#" onclick="window.history.back()" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-lg"></i> <span th:text="${submitText}">Submit</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Input Field Fragment (Text, Email, Number) -->
+<div th:fragment="input-field(label, fieldName, type, placeholder, required)">
+    <div class="mb-3">
+        <label th:for="${fieldName}" class="form-label" th:text="${label}">Field Label</label>
+        <input th:id="${fieldName}"
+               th:name="${fieldName}"
+               th:type="${type}"
+               th:placeholder="${placeholder}"
+               th:value="${#fields.hasErrors(fieldName)} ? ${#fields.errors(fieldName)} : *{__${fieldName}__}"
+               class="form-control"
+               th:required="${required}">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}">
+            Error message
+        </div>
+    </div>
+</div>
+
+<!-- Textarea Field Fragment -->
+<div th:fragment="textarea-field(label, fieldName, rows, placeholder, required)">
+    <div class="mb-3">
+        <label th:for="${fieldName}" class="form-label" th:text="${label}">Field Label</label>
+        <textarea th:id="${fieldName}"
+                  th:name="${fieldName}"
+                  th:rows="${rows}"
+                  th:placeholder="${placeholder}"
+                  class="form-control"
+                  th:required="${required}"
+                  th:text="*{__${fieldName}__}"></textarea>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}">
+            Error message
+        </div>
+    </div>
+</div>
+
+<!-- Select Field Fragment -->
+<div th:fragment="select-field(label, fieldName, options, required)">
+    <div class="mb-3">
+        <label th:for="${fieldName}" class="form-label" th:text="${label}">Field Label</label>
+        <select th:id="${fieldName}"
+                th:name="${fieldName}"
+                class="form-select"
+                th:required="${required}">
+            <option value="">-- Select an option --</option>
+            <option th:each="option : ${options}"
+                    th:value="${option.value}"
+                    th:text="${option.text}"
+                    th:selected="${option.value == __${fieldName}__}">
+                Option
+            </option>
+        </select>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}">
+            Error message
+        </div>
+    </div>
+</div>
+
+<!-- Radio Button Group Fragment -->
+<div th:fragment="radio-group(label, fieldName, options)">
+    <div class="mb-3">
+        <label class="form-label d-block" th:text="${label}">Field Label</label>
+        <div class="form-check" th:each="option : ${options}">
+            <input class="form-check-input"
+                   type="radio"
+                   th:name="${fieldName}"
+                   th:id="${fieldName + '-' + option.value}"
+                   th:value="${option.value}"
+                   th:checked="${option.value == __${fieldName}__}">
+            <label class="form-check-label"
+                   th:for="${fieldName + '-' + option.value}"
+                   th:text="${option.text}">
+                Option text
+            </label>
+        </div>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}">
+            Error message
+        </div>
+    </div>
+</div>
+
+<!-- Checkbox Group Fragment -->
+<div th:fragment="checkbox-group(label, fieldName, options)">
+    <div class="mb-3">
+        <label class="form-label d-block" th:text="${label}">Field Label</label>
+        <div class="form-check" th:each="option : ${options}">
+            <input class="form-check-input"
+                   type="checkbox"
+                   th:name="${fieldName}"
+                   th:id="${fieldName + '-' + option.value}"
+                   th:value="${option.value}"
+                   th:checked="${#lists.contains(__${fieldName}__, option.value)}">
+            <label class="form-check-label"
+                   th:for="${fieldName + '-' + option.value}"
+                   th:text="${option.text}">
+                Option text
+            </label>
+        </div>
+        <div class="invalid-feedback" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}">
+            Error message
+        </div>
+    </div>
+</div>
+
+<!-- Date Picker Fragment -->
+<div th:fragment="date-field(label, fieldName, required)">
+    <div class="mb-3">
+        <label th:for="${fieldName}" class="form-label" th:text="${label}">Field Label</label>
+        <input th:id="${fieldName}"
+               th:name="${fieldName}"
+               type="date"
+               class="form-control"
+               th:value="*{__${fieldName}__}"
+               th:required="${required}">
+        <div class="invalid-feedback" th:if="${#fields.hasErrors(fieldName)}" th:errors="*{__${fieldName}__}">
+            Error message
+        </div>
+    </div>
+</div>
+
+</html>
